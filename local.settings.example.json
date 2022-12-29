@@ -1,10 +1,10 @@
 {
   "IsEncrypted": false,
-  "Values": {
-    "AzureWebJobsStorage": "",
-    "FUNCTIONS_WORKER_RUNTIME": "dotnet-isolated",
-      "UlsDataStorage":"CONNECTION_STRING_TO_STORAGE"
-  },
+    "Values": {
+        "AzureWebJobsStorage": "",
+        "FUNCTIONS_WORKER_RUNTIME": "dotnet-isolated",
+        "UlsDataStorage": "DefaultEndpointsProtocol=https;AccountName=urldataeeacnstg;AccountKey=eue9WxAgVYnsFvTmcOzh0eMwjsSFJLL1nx3V4NOQ0oUh1buPioD37EVKkoJVLNeUUmAybO3WkC9f+AStQxZTdg==;EndpointSuffix=core.windows.net"
+    },
   "Host": {
     "LocalHttpPort": 7071,
     "CORS": "*",
