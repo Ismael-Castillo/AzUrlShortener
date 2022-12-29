@@ -18,7 +18,7 @@
         },
         "GitHubURL": {
             "type": "string",
-            "defaultValue": "https://github.com/fboucher/AzUrlShortener.git",
+            "defaultValue": "https://github.com/Ismael-Castillo/AzUrlShortener.git",
             "metadata": {
                 "description": "The URL of GitHub (ending by .git)"
             }
@@ -113,7 +113,7 @@
                         }
                     ]
                 },
-                "serverFarmId": "[resourceId('Microsoft.Web/serverfarms/', variables('funcHhostingPlanName'))]",                
+                "serverFarmId": "[resourceId('Microsoft.Web/serverfarms/', variables('funcHhostingPlanName'))]",
                 "use32BitWorkerProcess": true,
                 "netFrameworkVersion": "v6.0",
                 "clientAffinityEnabled": true
