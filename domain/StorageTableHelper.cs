@@ -1,12 +1,10 @@
-using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Microsoft.Azure.Cosmos.Table;
 
 namespace Cloud5mins.domain
 {
-	class StorageTableHelper
+	public class StorageTableHelper
 	{
 		private string StorageConnectionString { get; set; }
 
@@ -64,5 +62,61 @@ namespace Cloud5mins.domain
 			ShortUrlEntity eShortUrl = result.Result as ShortUrlEntity;
 			return eShortUrl;
 		}
+
+		public async Task<bool> IfShortUrlEntityExist(ShortUrlEntity row)
+		{
+			ShortUrlEntity eShortUrl = await GetShortUrlEntity(row);
+			return (eShortUrl != null);
+		}
+
+		public async Task<int> GetNextTableId()
+		{
+			//Get current ID
+			TableOperation selOperation = TableOperation.Retrieve<NextId>("1", "KEY");
+			TableResult result = await GetUrlsTable().ExecuteAsync(selOperation);
+			NextId entity = result.Result as NextId;
+
+			if (entity == null)
+			{
+				entity = new NextId
+				{
+					PartitionKey = "1",
+					RowKey = "KEY",
+					Id = 1024
+				};
+			}
+			entity.Id++;
+
+			//Update
+			TableOperation updOperation = TableOperation.InsertOrMerge(entity);
+
+			// Execute the operation.
+			await GetUrlsTable().ExecuteAsync(updOperation);
+
+			return entity.Id;
+		}
+
+		public async Task<bool> IfShortUrlEntityExistByVanity(string vanity)
+		{
+			ShortUrlEntity shortUrlEntity = await GetShortUrlEntityByVanity(vanity);
+			return (shortUrlEntity != null);
+		}
+
+		public async Task<ShortUrlEntity> GetShortUrlEntityByVanity(string vanity)
+		{
+			var tblUrls = GetUrlsTable();
+			TableContinuationToken token = null;
+			ShortUrlEntity shortUrlEntity = null;
+			do
+			{
+				TableQuery<ShortUrlEntity> query = new TableQuery<ShortUrlEntity>().Where(
+					filter: TableQuery.GenerateFilterCondition("RowKey", QueryComparisons.Equal, vanity));
+				var queryResult = await tblUrls.ExecuteQuerySegmentedAsync(query, token);
+				shortUrlEntity = queryResult.Results.FirstOrDefault();
+			} while (token != null);
+
+			return shortUrlEntity;
+		}
+
 	}
 }
